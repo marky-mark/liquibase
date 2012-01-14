@@ -1,0 +1,12 @@
+target*
+*target*
+.idea
+*.iml
+atlassian-ide-plugin.xml
+.*
+tools/dependency-reduced-pom.xml
+*.iws
+*.ipr
+*.bak
+work
+*~
