@@ -1,0 +1,79 @@
+
+Before executing liquibase.. go into mysql db and create a db
+'liquibaseTestDB'
+
+---------------------------------------------------------------------------
+
+This project is to demonstrate liquibase and is Setup so that the only way 
+to update the database is to go into the module 'liquibase' and run the 
+following command:
+
+mvn liquibase:update
+
+This is achievable due to the Main.java in the package com.test.db
+
+---------------------------------------------------------------------------
+
+
+The 2nd way to achieve liquibase (To be part of the 'mvn clean package')
+make the following changes
+
+*In the pom.xml
+
+<build>
+    <finalName>liquibase</finalName>
+    <plugins>
+       <plugin>
+         <groupId>org.liquibase</groupId>
+         <artifactId>liquibase-maven-plugin</artifactId>
+         <version>2.0.1</version>
+         <executions>
+           <execution>
+             <phase>process-resources</phase>
+             <configuration>
+
+	      <changeLogFile>changelog.xml</changeLogFile>
+               <driver>com.mysql.jdbc.Driver</driver>
+               <url>jdbc:mysql://localhost:3306/liquibaseTestDB</url>
+               <username>root</username>
+               <password>root123</password>
+             </configuration>
+             <goals>
+               <goal>update</goal>
+             </goals>
+           </execution>
+         </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+*****Delete the following*****
+
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+
+                                 implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.test.db.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+*The Main.java may be deleted as it is no longer needed
+
+running
+
+'mvn clean package' will create the tables in the db 
